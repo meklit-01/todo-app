@@ -1,8 +1,24 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import todo_icon from '../assets/todo_icon.png'
 import Todoitems from './Todoitems'
 
 const Todo = () => {
+  const [todoList, setTodo] = useState([]);  
+  const inputRef = useRef();
+  const add = () =>{
+      const inputText = inputRef.current.value.trim();
+     if (inputText === ""){
+      return null;
+     }
+      const newTodo = {
+        id: Date.now(),
+        text: inputText,
+        isComplet:false,
+      }
+
+      setTodo((prev)=> [...prev, newTodo]);
+      inputRef.current.value = "";
+  }
   return (
     <div className='bg-white place-self-center w-11/12 max-w-md flex flex-col p-7 min-h-[550px]  rounded-xl'>
     
@@ -13,12 +29,15 @@ const Todo = () => {
     </div>
 
     <div className='flex items-center my-7 bg-gray-200 rounded-full'>
-        <input className='bg-transparent border-0 outline-none flex-1 h-14 pl-6 pr-2 placeholder:text-slate-600' type='text' placeholder='Add your task'/>
-        <button className='border-none rounded-full bg-orange-600 w-32 h-14 text-white text-lg font-medium'>ADD +</button>
+        <input ref={inputRef} className='bg-transparent border-0 outline-none flex-1 h-14 pl-6 pr-2 placeholder:text-slate-600' type='text' placeholder='Add your task'/>
+        <button onClick={add} className='border-none rounded-full bg-orange-600 w-32 h-14 text-white text-lg font-medium'>ADD +</button>
     </div>
 
     <div>
-        <Todoitems/>
+      {todoList.map((item, index)=>{
+
+        return <Todoitems key={index} text={item.text}/>
+      })}
     </div>
 
     </div>
